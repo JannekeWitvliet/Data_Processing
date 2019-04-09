@@ -30,22 +30,23 @@ def extract_movies(dom):
 
     # loop through different movie contents to obtain information
     for content in dom.find_all('div', attrs={'class':'lister-item-content'}):
-        # print title
+        # obtain title
         Title = content.h3.a.string
-        # print rating
+        # obtain rating
         Rating = content.strong.string
-        # print year of release
+        # obtain year of release
         year_release = (content.find('span', attrs={'class':'lister-item-year text-muted unbold'}).string)
         Year = int(''.join(list(filter(str.isdigit, year_release))))
-        # print Actor/actresses
+        # obtain Actor/actresses
         link_list = content.find_all('a')
         actors_list =[]
         for actors_links in link_list:
             if '_st_' in actors_links['href']:
                 actors_list.append(actors_links.string)
+        # make actors one string
         Actors = ', '.join(actors_list)
 
-        # printing runtime
+        # obtain runtime
         runtime_movie = (content.find('span', attrs={'class':'runtime'}).string)
         Runtime = int(''.join(list(filter(str.isdigit, runtime_movie))))
 
@@ -61,6 +62,7 @@ def save_csv(outfile, movies):
     """
     writer = csv.writer(outfile)
     writer.writerow(['Title', 'Rating', 'Year', 'Actors', 'Runtime'])
+    # iterate over every list that contains movie info and write it in a csv file
     for list in movies:
         writer.writerow(list)
 
